@@ -1,3 +1,4 @@
+import { motion } from 'framer-motion'
 import { Card, CardContent } from '@/components/ui/card'
 import { Skeleton } from '@/components/ui/skeleton'
 
@@ -40,14 +41,28 @@ export function StatsCards({
 
   return (
     <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
-      {stats.map((stat) => (
-        <Card key={stat.label}>
-          <CardContent className="p-4 text-center">
-            <span className="text-2xl">{stat.emoji}</span>
-            <div className="text-3xl font-bold text-primary">{stat.value}</div>
-            <div className="text-sm text-muted-foreground">{stat.label}</div>
-          </CardContent>
-        </Card>
+      {stats.map((stat, index) => (
+        <motion.div
+          key={stat.label}
+          initial={{ opacity: 0, scale: 0.9 }}
+          animate={{ opacity: 1, scale: 1 }}
+          transition={{ delay: index * 0.1 }}
+        >
+          <Card className="hover:border-primary/50 transition-colors">
+            <CardContent className="p-4 text-center">
+              <span className="text-2xl">{stat.emoji}</span>
+              <motion.div
+                className="text-3xl font-bold text-primary"
+                initial={{ opacity: 0 }}
+                animate={{ opacity: 1 }}
+                transition={{ delay: index * 0.1 + 0.2 }}
+              >
+                {stat.value.toLocaleString()}
+              </motion.div>
+              <div className="text-sm text-muted-foreground">{stat.label}</div>
+            </CardContent>
+          </Card>
+        </motion.div>
       ))}
     </div>
   )

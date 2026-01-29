@@ -1,4 +1,5 @@
 import { useState } from 'react'
+import { motion } from 'framer-motion'
 import { Header } from './components/Header'
 import { StatsCards } from './components/StatsCards'
 import { ContributionGraph } from './components/ContributionGraph'
@@ -14,6 +15,20 @@ import { useGitHubEvents } from './hooks/useGitHubEvents'
 import { useLiveRepo } from './hooks/useLiveRepo'
 import { useCoverage } from './hooks/useCoverage'
 
+const fadeInUp = {
+  initial: { opacity: 0, y: 20 },
+  animate: { opacity: 1, y: 0 },
+  transition: { duration: 0.5 }
+}
+
+const staggerContainer = {
+  animate: {
+    transition: {
+      staggerChildren: 0.1
+    }
+  }
+}
+
 function App() {
   const [modalOpen, setModalOpen] = useState(false)
 
@@ -25,31 +40,42 @@ function App() {
 
   return (
     <div className="min-h-screen p-4 md:p-6 lg:p-8">
-      <div className="max-w-7xl mx-auto space-y-6">
+      <motion.div
+        className="max-w-7xl mx-auto space-y-6"
+        variants={staggerContainer}
+        initial="initial"
+        animate="animate"
+      >
         {/* Row 1: Header */}
-        <Header
-          user={user}
-          totalStars={totalStars}
-          isLoading={userLoading || reposLoading}
-        />
+        <motion.div variants={fadeInUp}>
+          <Header
+            user={user}
+            totalStars={totalStars}
+            isLoading={userLoading || reposLoading}
+          />
+        </motion.div>
 
         {/* Row 2: Stats Cards */}
-        <StatsCards
-          commitsThisYear={commitsThisYear}
-          totalStars={totalStars}
-          publicRepos={user?.public_repos || 0}
-          commitsToday={commitsToday}
-          isLoading={eventsLoading || userLoading}
-        />
+        <motion.div variants={fadeInUp}>
+          <StatsCards
+            commitsThisYear={commitsThisYear}
+            totalStars={totalStars}
+            publicRepos={user?.public_repos || 0}
+            commitsToday={commitsToday}
+            isLoading={eventsLoading || userLoading}
+          />
+        </motion.div>
 
         {/* Row 3: Contribution Graph */}
-        <ContributionGraph
-          contributions={contributions}
-          isLoading={eventsLoading}
-        />
+        <motion.div variants={fadeInUp}>
+          <ContributionGraph
+            contributions={contributions}
+            isLoading={eventsLoading}
+          />
+        </motion.div>
 
         {/* Row 4: Live Repo + Coverage */}
-        <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+        <motion.div variants={fadeInUp} className="grid grid-cols-1 md:grid-cols-2 gap-4">
           <LiveRepoSection
             data={liveData}
             isLoading={liveLoading}
@@ -59,10 +85,10 @@ function App() {
             coverage={coverage}
             isLoading={coverageLoading}
           />
-        </div>
+        </motion.div>
 
         {/* Row 5: Languages + Activity */}
-        <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+        <motion.div variants={fadeInUp} className="grid grid-cols-1 md:grid-cols-2 gap-4">
           <LanguagesChart
             languages={languages}
             isLoading={reposLoading}
@@ -71,14 +97,16 @@ function App() {
             events={events}
             isLoading={eventsLoading}
           />
-        </div>
+        </motion.div>
 
         {/* Row 6: Featured Repos */}
-        <FeaturedRepos
-          repos={topRepos}
-          isLoading={reposLoading}
-        />
-      </div>
+        <motion.div variants={fadeInUp}>
+          <FeaturedRepos
+            repos={topRepos}
+            isLoading={reposLoading}
+          />
+        </motion.div>
+      </motion.div>
 
       {/* Modal */}
       <PromptModal
